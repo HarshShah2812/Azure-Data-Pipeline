@@ -7,4 +7,4 @@ The aim of the project is to illustrate the process of data ingestion into a dat
 
 ## Project Architecture
 
-/Users/harshshah/Documents/DE_projects/de-pipeline-dbt-databricks-azure/medallion_dbt_spark/System Architecture.jpeg
+![architecture](/Users/harshshah/Documents/DE_projects/de-pipeline-dbt-databricks-azure/medallion_dbt_spark/System Architecture.jpeg)
