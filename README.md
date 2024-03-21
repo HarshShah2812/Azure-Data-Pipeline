@@ -4,3 +4,7 @@
 
 ## Overview
 The aim of the project is to illustrate the process of data ingestion into a data lake, followed by data integration using Azure Data Factory, and then data transformation using Databricks and dbt.
+
+## Project Architecture
+
+/Users/harshshah/Documents/DE_projects/de-pipeline-dbt-databricks-azure/medallion_dbt_spark/System Architecture.jpeg
