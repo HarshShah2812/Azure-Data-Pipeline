@@ -19,3 +19,10 @@ If done successfuly, you will get the following example output within the Query 
 You can also run the following query to see all the tables available within the SalesLT schema:
 
 <img width="1432" alt="Screenshot 2024-03-31 at 19 07 44" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/5b70a533-e1c9-45ab-b1f6-9f53a4ed0a59">
+
+## Orchestrating the pipeline
+Firstly, I linked Data Factory with the database and the storage account. I then created a new pipeline, deploying the database as the dataset. Within the pipeline, I firstly added a Lookup function, which would retrieve all the tables from the database using the query shown in the last screenshot above. I then added a ForEach function which is linked to the Lookup function, in order to iterate through each table and store the date in the Bronze container. Within the ForEach function, I added a Copy Data function, which uses a newly created dataset based on the original dataset as the source, as well as having parameters called SchemaName and TableName; the function was also configured to send each of the tables, once copied, as parquet files to the Bronze container, naming them based on the parameters, while storing them within a folder inside the container that was named using the yearmonthdate format.
+
+The contents within the Bronze container should look as such:
+
+<img width="1432" alt="Screenshot 2024-03-31 at 20 16 30" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/25b3fe48-403b-469e-bafe-cc9d6b649a99">
