@@ -26,3 +26,22 @@ Firstly, I linked Data Factory with the database and the storage account. I then
 The contents within the Bronze container should look as such:
 
 <img width="1432" alt="Screenshot 2024-03-31 at 20 16 30" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/25b3fe48-403b-469e-bafe-cc9d6b649a99">
+
+## Setting up Databricks
+After initially creating a Databricks workspace, I created the secret initially in the Azure Key Vault. To then get this information across to, I copied the Vault URI and Resource ID, pasting them onto the Create Secret Scope page, which is accessed using the following URL:
+
+`https://<databricks-instance>#secrets/createScope`
+
+Replace <databricks-instance> with the workspace URL of your Azure Databricks deployment. 
+
+In a new workbook, I verified the Databricks - Key Vault - Secret Scope integration by mounting the bronze layer, using the following code:
+
+`dbutils.fs.mount(
+    source = 'wasbs://bronze@medallionstoreacc.blob.core.windows.net',
+    mount_point = '/mnt/bronze',
+    extra_configs = {'fs.azure.account.key.medallionstoreacc.blob.core.windows.net': dbutils.secrets.get('databricksScope', 'storageAccountKey')}
+)`
+
+I did the same for the silver and gold layers, replacing 'bronze' with them in the code. I then used the following code to check the contents of the bronze layer:
+
+`dbutils.fs.ls('/mnt/bronze')`
