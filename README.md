@@ -45,3 +45,24 @@ In a new workbook, I verified the Databricks - Key Vault - Secret Scope integrat
 I did the same for the silver and gold layers, replacing 'bronze' with them in the code. I then used the following code to check the contents of the bronze layer:
 
 `dbutils.fs.ls('/mnt/bronze')`
+
+## Data Factory - Databricks Integration
+
+In Data Factory, I modified the ForEach function by connecting the Databricks workbook in such a way that the Parquet files in the Bronze Layer would be used to create tables in Databricks. This involved creating an Access Token to connect Data Factory with Databricks, which I did within the Developer section of the User settings in Databricks. I also added the notebook path that will be triggered everytime a job is sent to the Databricks notebook cluster, as well as the base parameters that we want to be accessed by the notebook, specifically the table_scheme, table_name, and FileName. Here is a screenshot:
+
+<img width="1387" alt="Screenshot 2024-05-02 at 19 09 54" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/08d119e4-75ac-4070-91b8-84010e8dc564">
+
+Next, within the notebook, I wrote the following piece of code, which creates a new database if one doesn't exist, as well as a new table if one doesn't already exist:
+
+`spark.sql(f'CREATE DATABASE IF NOT EXISTS {tableSchema}')
+
+spark.sql("""CREATE TABLE IF NOT EXISTS """+tableSchema+"""."""+tableName+"""
+            USING PARQUET 
+            LOCATION '/mnt/bronze/"""+fileName+"""/"""+tableSchema+"""."""+tableName+""".parquet'
+          """)`
+
+I then tried running the job in Data Factory, and an example of the results within Databricks can be seen below:
+
+<img width="1266" alt="Screenshot 2024-05-05 at 11 32 19" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/81aea258-b5b3-4968-bf78-10e39a09596e">
+
+<img width="1266" alt="Screenshot 2024-05-05 at 11 37 59" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/ae017283-7b7f-4629-997e-d0b3d751146c">
