@@ -54,14 +54,12 @@ In Data Factory, I modified the ForEach function by connecting the Databricks wo
 
 Next, within the notebook, I wrote the following piece of code, which creates a new database if one doesn't exist, as well as a new table if one doesn't already exist:
 
-`
-spark.sql(f'CREATE DATABASE IF NOT EXISTS {tableSchema}')
+`spark.sql(f'CREATE DATABASE IF NOT EXISTS {tableSchema}')`
 
-spark.sql("""CREATE TABLE IF NOT EXISTS """+tableSchema+"""."""+tableName+"""
+`spark.sql("""CREATE TABLE IF NOT EXISTS """+tableSchema+"""."""+tableName+"""
             USING PARQUET 
             LOCATION '/mnt/bronze/"""+fileName+"""/"""+tableSchema+"""."""+tableName+""".parquet'
-          """)
-`
+            """)`
 
 I then tried running the job in Data Factory, and an example of the results within Databricks can be seen below:
 
