@@ -63,6 +63,6 @@ Next, within the notebook, I wrote the following piece of code, which creates a 
 
 I then tried running the job in Data Factory, and an example of the results within Databricks can be seen below:
 
-<img width="1266" alt="Screenshot 2024-05-05 at 11 32 19" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/81aea258-b5b3-4968-bf78-10e39a09596e">
+<img width="1266" alt="Screenshot 2024-05-05 at 11 32 19" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/36705f58-770b-464f-9707-4f3a18cf4d02">
 
-<img width="1266" alt="Screenshot 2024-05-05 at 11 37 59" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/ae017283-7b7f-4629-997e-d0b3d751146c">
+<img width="1266" alt="Screenshot 2024-05-05 at 11 37 59" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/5e4a8e9d-d6ae-4dcc-a06e-42e279b6dcde">
