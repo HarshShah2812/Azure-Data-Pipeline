@@ -66,3 +66,9 @@ I then tried running the job in Data Factory, and an example of the results with
 <img width="1266" alt="Screenshot 2024-05-05 at 11 32 19" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/36705f58-770b-464f-9707-4f3a18cf4d02">
 
 <img width="1266" alt="Screenshot 2024-05-05 at 11 37 59" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/5e4a8e9d-d6ae-4dcc-a06e-42e279b6dcde">
+
+## DBT setup and configuration with Databricks
+
+In the terminal on VS code, I installed dbt-databricks using the pip installer, which allowed me to integrate dbt with Databricks. I then installed databricks-cli in order to access Databricks from the terminal.
+
+The next thing to do was configure dbt with Databricks. I firstly used a token generated in Databricks to connect to it from the terminal. If you then use the command `secrets list-scopes`, you will be able to see all the secrets created. When using the `databricks fs ls` command, the terminal returned all the files in the Databricks File System. I then initialised the dbt project by naming it and selecting the database I'd like to use (Databricks as opposed to Spark), as well as inputting the host, which follows this structure `https://adb-<workspace-id>.<random-number>.azuredatabricks.net`, and the HTTP path, which can be retrieved from the Advanced Configuration settings of the Cluster you've created, which is accessed in the Compute section of Databricks. The default schema that I chose for dbt to run the projects in was saleslt, as can be seen within the hive_metastore in the image above. When running `dbt debug`, it initially returned an error, which led me to modify the profiles.yml file within the .dbt directory and change the directory I was running the command in, after which the `dbt debug` command returned successfully.
