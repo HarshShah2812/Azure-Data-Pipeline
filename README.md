@@ -101,7 +101,8 @@ sources:
       - name: productdescription
       - name: productmodel
       - name: salesorderdetail
-      - name: salesorderheader`
+      - name: salesorderheader
+`
 
 After succesfully running `dbt debug` again, I ran the `dbt snapshot` command once again, which was successful this time. The result in Databricks can be seen below:
 
