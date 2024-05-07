@@ -72,3 +72,46 @@ I then tried running the job in Data Factory, and an example of the results with
 In the terminal on VS code, I installed dbt-databricks using the pip installer, which allowed me to integrate dbt with Databricks. I then installed databricks-cli in order to access Databricks from the terminal.
 
 The next thing to do was configure dbt with Databricks. I firstly used a token generated in Databricks to connect to it from the terminal. If you then use the command `secrets list-scopes`, you will be able to see all the secrets created. When using the `databricks fs ls` command, the terminal returned all the files in the Databricks File System. I then initialised the dbt project by naming it and selecting the database I'd like to use (Databricks as opposed to Spark), as well as inputting the host, which follows this structure `https://adb-<workspace-id>.<random-number>.azuredatabricks.net`, and the HTTP path, which can be retrieved from the Advanced Configuration settings of the Cluster you've created, which is accessed in the Compute section of Databricks. The default schema that I chose for dbt to run the projects in was saleslt, as can be seen within the hive_metastore in the image above. When running `dbt debug`, it initially returned an error, which led me to modify the profiles.yml file within the .dbt directory and change the directory I was running the command in, after which the `dbt debug` command returned successfully.
+
+## DBT snapshots with Databricks and ADLS Gen2
+
+I now had to create snapshots for each of the tables in the saleslt database, creating the SQL scripts for each of them. If we take the example of the 'address' snapshot below:
+
+<img width="445" alt="Screenshot 2024-05-06 at 17 44 34" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/d405294d-cf88-4c8b-9d84-9d1a0048a1b7">
+
+The configuration involves defining the format of the file, which in this case, is Delta; the mounting point i.e. where the data will be stored, is in the Silver layer; the target schema i.e. the default schema that dbt will built objects into; hard deletes will be invalidated, so that dbt can track the records in the source table that have been deleted, creating a row in the snapshot for each deleted record; the unique key will be the AddressID column i.e. dbt will use this column to match records between a result set and the existing snapshot; the strategy used will be check as opposed to timestamp, which will result in changes being tracked based on the values of specific columns, and all the columns will be checked, therefore dbt will create a new snapshot whenever any column changes for a user.
+Using a Common Table Expression (CTE), I then selected the columns that I wanted to appear in the snapshot.
+
+I then ran the `dbt snapshot` command in the terminal, however this initially returned an error due to the customer snapshot depending on the customer table within the saleslt schema, which couldn't be found.
+
+This led me to fix the models by creating a YML file inside a 'staging' sub-folder within the 'models' folder, that will recognise all the tables and the schema as a whole, which I called bronze.yml. The contents of the file can be seen below:
+
+`version: 2
+
+sources:
+  - name: saleslt
+    schema: saleslt
+    description: This is the adventureworks database loaded into bronze
+    tables:
+      - name: address
+      - name: customer
+      - name: customeraddress
+      - name: product
+      - name: productcategory
+      - name: productdescription
+      - name: productmodel
+      - name: salesorderdetail
+      - name: salesorderheader
+      `
+After succesfully running `dbt debug` again, I ran the `dbt snapshot` command once again, which was successful this time. The result in Databricks can be seen below:
+
+<img width="1275" alt="Screenshot 2024-05-07 at 21 57 40" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/89c27645-0f39-4f08-93b5-b7f446dd515c">
+
+<img width="1275" alt="Screenshot 2024-05-07 at 22 00 40" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/743d0e66-c646-4c2c-9bfe-5bb7342bb7cc">
+
+The snapshots could also be seen within the Silver container in Azure.
+
+
+
+
+
