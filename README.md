@@ -96,6 +96,22 @@ After succesfully running `dbt debug` again, I ran the `dbt snapshot` command on
 
 The snapshots could also be seen within the Silver container in Azure.
 
+## DBT Data Marts with Databricks and ADLS Gen2
+
+Using the snapshots, I could now build the Data Marts i.e. the final tables. I created another sub-folder inside the models folder, calling it marts, and created 3 more sub-folders within the folder for the customer, product, and sales data. I then created sql and yml files within each of these folders. The sql file contains the necessary transformations, while the yml defines the structure of the data. Below are screeshots of the dim_product.sql and dim_product.yml files:
+
+<img width="569" alt="Screenshot 2024-05-08 at 22 34 16" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/816c1611-45fd-4cb1-b0ed-80249de8c1bf">
+
+<img width="656" alt="Screenshot 2024-05-08 at 22 35 02" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/00c8abb0-fc92-4ba8-bc06-7e8705079afc">
+
+<img width="656" alt="Screenshot 2024-05-08 at 22 36 16" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/b3b83b08-2800-4c8b-91ce-5e6855aa1eaf">
+
+<img width="656" alt="Screenshot 2024-05-08 at 22 36 30" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/db333dbc-cff2-4da2-b293-9397070be963">
+
+I then tried to run the `dbt test` command, however it returned a error about configuration paths existing in the dbt_project.yml that didn't apply to any resources. This led me to modify the dbt_project.yml file by commenting out the medallion_dbt_spark config. When I then ran the `dbt run` and `dbt test` commands, I achieved the desired results. A screenshot of the dim_customer table can be seen below:
+
+<img width="1071" alt="Screenshot 2024-05-09 at 00 00 31" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/9f70acf7-9c68-42d0-9039-4676cf0d1746">
+
 
 
 
