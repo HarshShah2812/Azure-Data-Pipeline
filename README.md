@@ -86,22 +86,7 @@ I then ran the `dbt snapshot` command in the terminal, however this initially re
 
 This led me to fix the models by creating a YML file inside a 'staging' sub-folder within the 'models' folder, that will recognise all the tables and the schema as a whole, which I called bronze.yml. The contents of the file can be seen below:
 
-version: 2
-
-sources:
-  - name: saleslt
-    schema: saleslt
-    description: This is the adventureworks database loaded into bronze
-    tables:
-      - name: address
-      - name: customer
-      - name: customeraddress
-      - name: product
-      - name: productcategory
-      - name: productdescription
-      - name: productmodel
-      - name: salesorderdetail
-      - name: salesorderheader
+<img width="569" alt="Screenshot 2024-05-08 at 18 48 17" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/a325710a-ce2e-4f87-bbe9-f61dcfd0fdbe">
 
 After succesfully running `dbt debug` again, I ran the `dbt snapshot` command once again, which was successful this time. The result in Databricks can be seen below:
 
