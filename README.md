@@ -112,6 +112,12 @@ I then tried to run the `dbt test` command, however it returned a error about co
 
 <img width="1071" alt="Screenshot 2024-05-09 at 00 00 31" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/9f70acf7-9c68-42d0-9039-4676cf0d1746">
 
+## DBT documentation
 
+One of the best features about DBT is that it generates documentation regarding the transformations for you. Here are some screenshots to show what can be seen:
 
+<img width="1432" alt="Screenshot 2024-03-21 at 15 43 15" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/44978048-9044-48df-a82e-58da2fd16904">
 
+<img width="1432" alt="Screenshot 2024-03-21 at 15 46 15" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/97d5d10c-f5be-4907-9f97-1156bf989954">
+
+<img width="1432" alt="Screenshot 2024-03-21 at 15 53 57" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/c23242c7-2110-42bf-9db0-2e4f5be2d9fb">
