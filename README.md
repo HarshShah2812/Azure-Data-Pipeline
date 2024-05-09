@@ -12,7 +12,7 @@ The aim of the project is to illustrate the process of data ingestion into a dat
 ## Setting up the base Azure Infrastructure
 After creating an Azure account, I firstly created the resource group, within which we will be able to manage all the resources needed for the project. Then, I created a storage account using the Data Lake Gen2 service, within which I set up the Medallion architecture, by creating separate containers for the Bronze, Silver, and Gold layers. Next, I set up Azure Data Factory, within which I would be building the data pipeline. I then created a Key Vault for managing secrets, which will be necessary when integrating Azure Databricks, as it will allow Databricks to retrieve secrets securely at runtime, which will ensure that sensitive information is never exposed in plaintext within Databricks notebooks, jobs, or configurations. Lastly, I created a SQL database, using the sample AdventureWorks database as the source.
 
-If done successfuly, you will get the following example output within the Query Editor:
+If done successfully, you will get the following example output within the Query Editor:
 
 <img width="1432" alt="Screenshot 2024-03-31 at 19 05 08" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/91166a09-66b3-4281-af11-c50474c55dcc">
 
@@ -21,14 +21,14 @@ You can also run the following query to see all the tables available within the 
 <img width="1432" alt="Screenshot 2024-03-31 at 19 07 44" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/5b70a533-e1c9-45ab-b1f6-9f53a4ed0a59">
 
 ## Orchestrating the pipeline
-Firstly, I linked Data Factory with the database and the storage account. I then created a new pipeline, deploying the database as the dataset. Within the pipeline, I firstly added a Lookup function, which would retrieve all the tables from the database using the query shown in the last screenshot above. I then added a ForEach function which is linked to the Lookup function, in order to iterate through each table and store the data in the Bronze container. Within the ForEach function, I added a Copy Data function, which uses a newly created dataset based on the original dataset as the source, as well as having parameters called SchemaName and TableName; the function was also configured to send each of the tables, once copied, as parquet files to the Bronze container, naming them based on the parameters, while storing them within a folder inside the container that was named using the yearmonthdate format.
+Firstly, I linked Data Factory with the database and the storage account. I then created a new pipeline, deploying the database as the dataset. Within the pipeline, I firstly added a Lookup function, which would retrieve all the tables from the database using the query shown in the last screenshot above. I then added a ForEach function which is linked to the Lookup function, in order to iterate through each table and store the data in the Bronze container. Within the ForEach function, I added a Copy Data function, which uses a newly created dataset based on the original dataset as the source, as well as having parameters called SchemaName and TableName; the function was also configured to send each of the tables, once copied, as Parquet files to the Bronze container, naming them based on the parameters, while storing them within a folder inside the container that was named using the yearmonthdate format.
 
 The contents within the Bronze container should look as such:
 
 <img width="1432" alt="Screenshot 2024-03-31 at 20 16 30" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/25b3fe48-403b-469e-bafe-cc9d6b649a99">
 
 ## Setting up Databricks
-After initially creating a Databricks workspace, I created the secret initially in the Azure Key Vault. To then get this information across to, I copied the Vault URI and Resource ID, pasting them onto the Create Secret Scope page, which is accessed using the following URL:
+After initially creating a Databricks workspace, I created the secret initially in the Azure Key Vault. To then get this information across to Databricks, I copied the Vault URI and Resource ID, pasting them onto the Create Secret Scope page, which is accessed using the following URL:
 
 `https://<databricks-instance>#secrets/createScope`
 
@@ -79,8 +79,7 @@ I now had to create snapshots for each of the tables in the saleslt database, cr
 
 <img width="445" alt="Screenshot 2024-05-06 at 17 44 34" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/d405294d-cf88-4c8b-9d84-9d1a0048a1b7">
 
-The configuration involves defining the format of the file, which in this case, is Delta; the mounting point i.e. where the data will be stored, is in the Silver layer; the target schema i.e. the default schema that dbt will built objects into; hard deletes will be invalidated, so that dbt can track the records in the source table that have been deleted, creating a row in the snapshot for each deleted record; the unique key will be the AddressID column i.e. dbt will use this column to match records between a result set and the existing snapshot; the strategy used will be check as opposed to timestamp, which will result in changes being tracked based on the values of specific columns, and all the columns will be checked, therefore dbt will create a new snapshot whenever any column changes for a user.
-Using a Common Table Expression (CTE), I then selected the columns that I wanted to appear in the snapshot.
+The configuration involves defining the format of the file, which in this case is Delta; the mounting point (i.e., where the data will be stored) is in the Silver layer; the target schema (i.e., the default schema that dbt will build objects into) will be set; hard deletes will be invalidated, so that dbt can track the records in the source table that have been deleted, creating a row in the snapshot for each deleted record; the unique key will be the AddressID column (i.e., dbt will use this column to match records between a result set and the existing snapshot); the strategy used will be 'check' as opposed to 'timestamp', which will result in changes being tracked based on the values of specific columns, and all the columns will be checked, therefore dbt will create a new snapshot whenever any column changes for a user. Using a Common Table Expression (CTE), I then selected the columns that I wanted to appear in the snapshot.
 
 I then ran the `dbt snapshot` command in the terminal, however this initially returned an error due to the customer snapshot depending on the customer table within the saleslt schema, which couldn't be found.
 
@@ -98,7 +97,7 @@ The snapshots could also be seen within the Silver container in Azure.
 
 ## DBT Data Marts with Databricks and ADLS Gen2
 
-Using the snapshots, I could now build the Data Marts i.e. the final tables. I created another sub-folder inside the models folder, calling it marts, and created 3 more sub-folders within the folder for the customer, product, and sales data. I then created sql and yml files within each of these folders. The sql file contains the necessary transformations, while the yml defines the structure of the data. Below are screeshots of the dim_product.sql and dim_product.yml files respectively:
+Using the snapshots, I could now build the Data Marts i.e., the final tables. I created another sub-folder inside the models folder, calling it marts, and created 3 more sub-folders within the folder for the customer, product, and sales data. I then created sql and yml files within each of these folders. The sql file contains the necessary transformations, while the yml defines the structure of the data. Below are screeshots of the dim_product.sql and dim_product.yml files respectively:
 
 <img width="569" alt="Screenshot 2024-05-08 at 22 34 16" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/816c1611-45fd-4cb1-b0ed-80249de8c1bf">
 
@@ -108,13 +107,13 @@ Using the snapshots, I could now build the Data Marts i.e. the final tables. I c
 
 <img width="656" alt="Screenshot 2024-05-08 at 22 36 30" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/db333dbc-cff2-4da2-b293-9397070be963">
 
-I then tried to run the `dbt test` command, however it returned a error about configuration paths existing in the dbt_project.yml that didn't apply to any resources. This led me to modify the dbt_project.yml file by commenting out the medallion_dbt_spark config. When I then ran the `dbt run` and `dbt test` commands, I achieved the desired results. A screenshot of the dim_customer table can be seen below:
+I then tried to run the `dbt test` command, but it returned a error about configuration paths existing in the dbt_project.yml that didn't apply to any resources. This led me to modify the dbt_project.yml file by commenting out the medallion_dbt_spark config. When I then ran the `dbt run` and `dbt test` commands, I achieved the desired results. A screenshot of the dim_customer table can be seen below:
 
 <img width="1071" alt="Screenshot 2024-05-09 at 00 00 31" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/9f70acf7-9c68-42d0-9039-4676cf0d1746">
 
 ## DBT documentation
 
-One of the best features about DBT is that it generates documentation regarding the transformations for you. Here are some screenshots to show what can be seen:
+One of the best features about DBT is that it generates documentation regarding the transformations for you, and this was done using both the `dbt docs generate` and `dbt docs serve` commands to generate and open the documentation in a local site respectively. Here are some screenshots to show what can be seen:
 
 <img width="1432" alt="Screenshot 2024-03-21 at 15 43 15" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/44978048-9044-48df-a82e-58da2fd16904">
 
