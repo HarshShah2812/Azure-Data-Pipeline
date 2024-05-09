@@ -97,7 +97,7 @@ The snapshots could also be seen within the Silver container in Azure.
 
 ## DBT Data Marts with Databricks and ADLS Gen2
 
-Using the snapshots, I could now build the Data Marts i.e., the final tables. I created another sub-folder inside the models folder, calling it marts, and created 3 more sub-folders within the folder for the customer, product, and sales data. I then created sql and yml files within each of these folders. The sql file contains the necessary transformations, while the yml defines the structure of the data. Below are screeshots of the dim_product.sql and dim_product.yml files respectively:
+Using the snapshots, I could now build the Data Marts i.e., the final tables. I created another sub-folder inside the models folder, calling it marts, and created 3 more sub-folders within the folder for the customer, product, and sales data. I then created sql and yml files within each of these folders. The sql file contains the necessary transformations, while the yml defines the structure of the data. Below are screenshots of the dim_product.sql and dim_product.yml files respectively:
 
 <img width="569" alt="Screenshot 2024-05-08 at 22 34 16" src="https://github.com/HarshShah2812/de-pipeline-dbt-databricks-azure/assets/67421468/816c1611-45fd-4cb1-b0ed-80249de8c1bf">
 
